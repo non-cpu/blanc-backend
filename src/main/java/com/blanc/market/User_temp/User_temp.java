@@ -13,12 +13,14 @@ import java.util.List;
 public class User_temp {
 
     @Id @GeneratedValue
+    @Column(name = "user_id")
     private Long id;
 
     private String name;
 
-    @OneToMany
+    @OneToMany(mappedBy = "user")
     private List<Order> order = new ArrayList<>();
+
 
 
 }

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 @RequiredArgsConstructor
 public class UserRepository_temp {
 
+    @PersistenceContext
     private EntityManager em;
 
     private void save(User_temp user){
