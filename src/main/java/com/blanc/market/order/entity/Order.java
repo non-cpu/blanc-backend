@@ -30,6 +30,8 @@ public class Order {
 
     private LocalDateTime orderDate;
 
+    //private int baseTime;
+
 
     // 양방향 연관관계
     public void setUser(User_temp user){
@@ -55,7 +57,7 @@ public class Order {
 
 
     //비지니스로직
-    public void cancel(){
-
+    public void cancelOrder(){
+        this.setStatus(OrderStatus.CANCEL);
     }
 }

@@ -7,7 +7,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public class OrderRequest {
     private Long userId;
-    private Long itemId;
+    private Long productId;
     private int orderprice;
     private int count;
 }

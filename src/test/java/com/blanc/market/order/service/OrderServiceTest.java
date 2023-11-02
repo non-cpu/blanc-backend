@@ -3,6 +3,7 @@ package com.blanc.market.order.service;
 import com.blanc.market.Product_temp.Product_temp;
 import com.blanc.market.User_temp.User_temp;
 import com.blanc.market.order.dto.OrderRequest;
+import com.blanc.market.order.dto.OrderResponse;
 import com.blanc.market.order.entity.Order;
 import com.blanc.market.order.entity.OrderProduct;
 import com.blanc.market.order.repository.OrderRepository;
@@ -38,20 +39,24 @@ public class OrderServiceTest {
         OrderRequest orderRequest1 = new OrderRequest(user.getId(), product.getId(), product.getPrice(),1);
 
         //when
-        Long orderId = orderService.order(orderRequest1);
+        OrderResponse orderResponse = orderService.order(orderRequest1);
+        Long orderId = orderResponse.getId();
 
         //then
         Order getOrder = orderRepository.findOne(orderId);
         User_temp getUser1 = getOrder.getUser();
         String user1Name = getUser1.getName();
 
-        List<OrderProduct> getProduct1 = getOrder.getOrderProducts();
+        List<OrderProduct> getProducts = getOrder.getOrderProducts();
 
-
-        System.out.println("test_product" + getProduct1); //제품 뽑기?
+        Product_temp getproduct1 = new Product_temp();
+        System.out.println("test_product" + getProducts); //제품 뽑기?
+        for(OrderProduct getOrderproduct : getProducts){
+            getproduct1 = getOrderproduct.getProduct();
+        }
 
         assertEquals("상품 주문자 일치","user1",user1Name);
-
+        assertEquals("주문 상품 일치","p1",getproduct1.getName());
 
     }
 
