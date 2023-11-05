@@ -11,8 +11,8 @@ import java.util.Set;
 @Entity
 @Getter
 @Builder
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Where(clause = "is_deleted = false")
 public class Product extends BaseEntity {
     @Id
