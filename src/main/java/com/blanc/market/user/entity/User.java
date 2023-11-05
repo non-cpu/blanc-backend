@@ -1,12 +1,13 @@
 package com.blanc.market.user.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -27,6 +28,9 @@ public class User {
 
     private String address;
 
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
     public void changeName(String name) {
         this.name = name;
     }
@@ -41,5 +45,9 @@ public class User {
 
     public void changeAddress(String address) {
         this.address = address;
+    }
+
+    public void changeRole(Role role) {
+        this.role = role;
     }
 }

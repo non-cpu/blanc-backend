@@ -6,13 +6,11 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SignupRequest {
+public class LoginRequest {
 
-    private String name;
-
+    @NonNull
     private String email;
 
+    @NonNull
     private String password;
-
-    private String address;
 }
