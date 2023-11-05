@@ -43,7 +43,7 @@ public class OrderServiceTest {
         Long orderId = orderResponse.getId();
 
         //then
-        Order getOrder = orderRepository.findOne(orderId);
+        Order getOrder = orderRepository.findById(orderId).get();
         User_temp getUser1 = getOrder.getUser();
         String user1Name = getUser1.getName();
 

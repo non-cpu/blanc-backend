@@ -1,25 +1,16 @@
 package com.blanc.market.order.repository;
 
+import com.blanc.market.User_temp.User_temp;
 import com.blanc.market.order.entity.Order;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-@Repository
-@RequiredArgsConstructor
-public class OrderRepository {
+import java.util.List;
 
-    private final EntityManager em;
 
-    public void save(Order order){
-        em.persist(order);
-    }
+public interface OrderRepository extends JpaRepository<Order,Long> {
 
-    public Order findOne(Long id){
-        return em.find(Order.class, id);
-    }
-
-    public void cancle(Long id){
-
-    }
+    List<Order> findAllByUser(User_temp currentUser);
 }

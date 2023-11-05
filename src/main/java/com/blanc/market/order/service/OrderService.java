@@ -11,9 +11,12 @@ import com.blanc.market.order.dto.OrderRequest;
 import com.blanc.market.order.entity.OrderStatus;
 import com.blanc.market.order.mapper.OrderMapper;
 import com.blanc.market.order.repository.OrderRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
@@ -51,8 +54,18 @@ public class OrderService {
         getEntity(id).cancelOrder();
     }
 
+    public List<OrderResponse> findAllMyOrders(){
+
+        //User_temp loginUser = authService.getLoginUser();
+        Long testId = Long.valueOf(1);
+
+        User_temp loginUser = userRepository.findOne(testId);
+        return orderRepository.findAllByUser(loginUser).stream()
+                .map(orderMapper::toDto).toList();
+    }
+
 
     public Order getEntity(Long id){
-        return orderRepository.findOne(id);  //예외처리 추가햐야함
+        return orderRepository.findById(id).get();  //예외처리 추가햐야함
     }
 }

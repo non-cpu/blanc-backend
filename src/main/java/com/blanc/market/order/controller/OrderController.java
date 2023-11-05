@@ -9,10 +9,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -37,6 +36,14 @@ public class OrderController {
     }
 
     //완전 삭제도 필요?
+
+
+    //사용자 주문 조회
+    @GetMapping("api/orders/my-orders")
+    public ResponseEntity<List<OrderResponse>> getMyOrders(){
+        return ResponseEntity.ok(orderService.findAllMyOrders());
+    }
+
 
 
 }
