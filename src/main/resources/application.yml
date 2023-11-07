@@ -1,17 +1,22 @@
 spring:
   datasource:
-    url: jdbc:h2:tcp://localhost/~/testdb
-    username: sa
-    password:
-    driver-class-name: org.h2.Driver
+    url: jdbc:mysql://localhost:3306/blanc_market_db
+    username: tmp-username
+    password: tmp-password
+    driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
-        # show_sql: true
+        show_sql: true
         format_sql: true
+        dialect: org.hibernate.dialect.MySQLDialect
+    open-in-view: true
 
 logging.level:
   org.hibernate.SQL: debug
+
+server:
+  port: 8080

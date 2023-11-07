@@ -1,6 +1,5 @@
 package com.blanc.market.domain.product.entity;
 
-import com.blanc.market.domain.review.entity.Review;
 import com.blanc.market.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -28,6 +27,6 @@ public class Product extends BaseEntity {
     @Column(nullable = false)
     private String description;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Review> reviews;
+//    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private Set<Review> reviews;
 }

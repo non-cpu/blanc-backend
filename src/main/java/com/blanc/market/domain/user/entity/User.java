@@ -1,27 +1,57 @@
 package com.blanc.market.domain.user.entity;
 
-import com.blanc.market.global.entity.BaseEntity;
+import com.blanc.market.domain.order.entity.Order;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
-public class User extends BaseEntity {
+@Builder
+@AllArgsConstructor
+@RequiredArgsConstructor
+public class User {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(updatable = false)
+    @GeneratedValue
     private Long id;
 
-    @Column(length = 50, unique = true)
+    private String name;
+
     private String email;
 
-    @Column(length = 100)
     private String password;
 
-    @Column(length = 50)
-    private String username;
+    private String address;
 
-//    public void setUserRole(ROLE role) {
-//        this.role = role;
-//    }
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
+    @OneToMany(mappedBy = "user")
+    private List<Order> order = new ArrayList<>();
+
+    public void changeName(String name) {
+        this.name = name;
+    }
+
+    public void changeEmail(String email) {
+        this.email = email;
+    }
+
+    public void changePassword(String password) {
+        this.password = password;
+    }
+
+    public void changeAddress(String address) {
+        this.address = address;
+    }
+
+    public void changeRole(Role role) {
+        this.role = role;
+    }
 }
