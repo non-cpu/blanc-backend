@@ -18,7 +18,7 @@ public class OrderController {
 
     private final OrderService orderService;
 
-    //ResponseEntity 쓰면 깔끔?
+
     @PostMapping("/api/orders")
     public ResponseEntity<OrderResponse> createOrder(
             @RequestBody @Valid OrderRequest dto){

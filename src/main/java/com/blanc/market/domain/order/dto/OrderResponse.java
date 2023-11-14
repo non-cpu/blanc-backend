@@ -8,4 +8,5 @@ import org.springframework.web.bind.annotation.Mapping;
 @AllArgsConstructor
 public class OrderResponse {
     private Long id;
+    private int totalPrice;
 }
