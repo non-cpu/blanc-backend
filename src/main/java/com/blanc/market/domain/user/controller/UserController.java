@@ -18,12 +18,6 @@ public class UserController {
         return userService.getUser(userId);
     }
 
-    @PostMapping("/{user_id}")
-    public UserDto updateUser(@PathVariable("user_id") Long userId,
-                              @RequestBody SignupRequest updateRequest){
-        return userService.updateUser(userId, updateRequest);
-    }
-
     @DeleteMapping("/{user_id}")
     public boolean deleteUser(@PathVariable("user_id") Long userId){
         return userService.deleteUser(userId);
