@@ -7,7 +7,11 @@ import com.blanc.market.domain.product.service.ProductService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -42,6 +46,8 @@ public class ProductController {
                 .collect(Collectors.toList());
     }
 
+
+
     @GetMapping("/{productId}")
     public Product getProductById(@PathVariable Long productId) {
         return productService.getProductById(productId);
@@ -50,6 +56,13 @@ public class ProductController {
     @DeleteMapping("/{productId}")
     public void deleteProduct(@PathVariable Long productId) {
         productService.delete(productId);
+    }
+
+
+    //검색 컨트롤러
+    @GetMapping("/search/{keyword}")
+    public ResponseEntity<List<ProductResponse>> searchProduct(@PathVariable String keyword, Pageable pageable){
+        return ResponseEntity.ok(productService.searchPage(keyword, pageable).getContent());
     }
 }
 
