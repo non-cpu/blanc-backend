@@ -23,6 +23,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{user_id}")
+    @Operation(summary = "회원 삭제", description = "userId를 통한 회원 삭제 메서드입니다.")
     public boolean deleteUser(@PathVariable("user_id") Long userId){
         return userService.deleteUser(userId);
     }
