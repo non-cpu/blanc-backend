@@ -41,7 +41,7 @@ public class UserService {
         User user = userRepository.findUserById(userId)
                 .orElseThrow(NoSuchElementException::new);
 
-        userRepository.delete(user);
+        user.delete();
 
         return true;
     }
