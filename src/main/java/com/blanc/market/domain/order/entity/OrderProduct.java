@@ -1,15 +1,19 @@
 package com.blanc.market.domain.order.entity;
 
 import com.blanc.market.domain.product.entity.Product;
+import com.blanc.market.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter @Setter
-public class OrderProduct {
+public class OrderProduct extends BaseEntity {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "order_product_id")
     private Long id;
 
@@ -21,16 +25,15 @@ public class OrderProduct {
     @JoinColumn(name = "order_id")
     private Order order;
 
-    private int orderprice;
+    private int quantity;
 
-    private int count;
 
     //생성 메서드
-    public static OrderProduct createOrderProduct(Product product, int orderprice, int count){
+    public static OrderProduct createOrderProduct(Product product,Order order, int quantity){
         OrderProduct orderProduct = new OrderProduct();
         orderProduct.setProduct(product);
-        orderProduct.setOrderprice(orderprice);
-        orderProduct.setCount(count);
+        orderProduct.setOrder(order);
+        orderProduct.setQuantity(quantity);
 
         return orderProduct;
     }

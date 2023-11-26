@@ -2,6 +2,12 @@ package com.blanc.market.domain.product.service;
 
 import com.blanc.market.domain.product.dto.ProductRequest;
 import com.blanc.market.domain.product.dto.ProductResponse;
+import com.blanc.market.domain.ingredient.dto.IngredientRequest;
+import com.blanc.market.domain.ingredient.entity.Ingredient;
+import com.blanc.market.domain.ingredient.entity.ProductIngredient;
+import com.blanc.market.domain.ingredient.mapper.IngredientMapper;
+import com.blanc.market.domain.ingredient.repository.IngredientRepository;
+import com.blanc.market.domain.ingredient.repository.ProductIngredientRepository;
 import com.blanc.market.domain.product.entity.Product;
 import com.blanc.market.domain.product.mapper.ProductMapper;
 import com.blanc.market.domain.product.repository.ProductRepository;
@@ -18,6 +24,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -25,10 +34,35 @@ public class ProductService {
     private final ReviewMapper reviewMapper;
     private final ProductMapper productMapper;
     private final ProductRepository productRepository;
+    private final IngredientRepository ingredientRepository;
+    private final ProductIngredientRepository productIngredientRepository;
 
     @Transactional
     public void createProduct(ProductRequest request) {
-        productRepository.save(productMapper.toEntity(request));
+        Product product = productMapper.toEntity(request);
+        Set<IngredientRequest> ingredients = request.getIngredients();
+
+        // 기존 디비에 있는 성분인지 아닌지 판단
+        for (IngredientRequest ingredient : ingredients) {
+            boolean existIngredient =
+                    ingredientRepository.existsByName(ingredient.getName());
+
+            Ingredient newIngredient = IngredientMapper.INSTANCE.toEntity(ingredient);
+            if(!existIngredient) { // 디비에 없을 시에만 저장
+                ingredientRepository.save(newIngredient);
+            }
+
+            // 중간 테이블인 ProductIngredient 생성
+            ProductIngredient productIngredient = ProductIngredient.builder()
+                    .ingredient(newIngredient)
+                    .product(product)
+                    .build();
+
+            productIngredientRepository.save(productIngredient);
+
+            product.addProductIngredient(productIngredient);
+        }
+        productRepository.save(product);
     }
 
     public ProductResponse getProductById(Long productId) {
