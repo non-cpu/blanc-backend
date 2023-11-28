@@ -2,6 +2,7 @@ package com.blanc.market.domain.product.controller;
 
 import com.blanc.market.domain.product.dto.ProductRequest;
 import com.blanc.market.domain.product.dto.ProductResponse;
+import com.blanc.market.domain.product.dto.ProductUpdateRequest;
 import com.blanc.market.domain.product.service.ProductService;
 import com.blanc.market.domain.review.dto.ReviewResponse;
 import jakarta.validation.Valid;
@@ -35,6 +36,14 @@ public class ProductController {
     @GetMapping
     public ResponseEntity<Page<ProductResponse>> getAllProducts(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
         return ResponseEntity.ok(productService.getAllProducts(page, size));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> updateProduct(
+            @PathVariable Long id,
+            @Valid @RequestBody ProductUpdateRequest request) {
+        productService.updateProduct(id, request);
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/{id}/upload")

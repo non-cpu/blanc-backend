@@ -8,6 +8,7 @@ import com.blanc.market.domain.ingredient.repository.IngredientRepository;
 import com.blanc.market.domain.ingredient.repository.ProductIngredientRepository;
 import com.blanc.market.domain.product.dto.ProductRequest;
 import com.blanc.market.domain.product.dto.ProductResponse;
+import com.blanc.market.domain.product.dto.ProductUpdateRequest;
 import com.blanc.market.domain.product.entity.Product;
 import com.blanc.market.domain.product.mapper.ProductMapper;
 import com.blanc.market.domain.product.repository.ProductRepository;
@@ -136,6 +137,12 @@ public class ProductService {
         return product.getReviews() != null
                 ? product.getReviews().stream().map(reviewMapper::from).collect(Collectors.toList())
                 : Collections.emptyList();
+    }
+
+    @Transactional
+    public void updateProduct(Long productId, ProductUpdateRequest request) {
+        Product product = productRepository.findById(productId).orElseThrow();
+        product.update(request);
     }
 
     @Transactional
