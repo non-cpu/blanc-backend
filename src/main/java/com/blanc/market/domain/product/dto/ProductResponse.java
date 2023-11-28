@@ -12,6 +12,7 @@ public class ProductResponse {
     private Long id;
     private String name;
     private int price;
+    private String imageUrl;
     private String description;
     private int likeCount;
     private Set<IngredientDto> ingredients;

@@ -24,6 +24,7 @@ public class Product extends BaseEntity {
 
     private String name;
     private int price;
+    private String imageUrl;
     private String description;
 
     @OneToMany(mappedBy = "product",
@@ -39,6 +40,10 @@ public class Product extends BaseEntity {
     private List<Review> reviews;
 
     private int likeCount;
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
 
     public void addProductIngredient(ProductIngredient productIngredient) {
         if (productIngredients == null) {

@@ -14,6 +14,7 @@ public class ProductRequest {
     @NotBlank @Size(min = 1, max = 20, message = "test")
     private String name;
     private int price;
+    private String imageUrl;
     private String description;
     private Set<IngredientRequest> ingredients;
 }
