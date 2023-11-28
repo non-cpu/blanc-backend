@@ -1,6 +1,5 @@
 package com.blanc.market.domain.user.controller;
 
-import com.blanc.market.domain.user.dto.SignupRequest;
 import com.blanc.market.domain.user.dto.UserDto;
 import com.blanc.market.domain.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -11,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "User", description = "User API Document")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/user")
+@RequestMapping("api/users")
 public class UserController {
 
     private final UserService userService;
