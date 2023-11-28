@@ -1,13 +1,13 @@
 package com.blanc.market.domain.product.service;
 
-import com.blanc.market.domain.product.dto.ProductRequest;
-import com.blanc.market.domain.product.dto.ProductResponse;
 import com.blanc.market.domain.ingredient.dto.IngredientRequest;
 import com.blanc.market.domain.ingredient.entity.Ingredient;
 import com.blanc.market.domain.ingredient.entity.ProductIngredient;
 import com.blanc.market.domain.ingredient.mapper.IngredientMapper;
 import com.blanc.market.domain.ingredient.repository.IngredientRepository;
 import com.blanc.market.domain.ingredient.repository.ProductIngredientRepository;
+import com.blanc.market.domain.product.dto.ProductRequest;
+import com.blanc.market.domain.product.dto.ProductResponse;
 import com.blanc.market.domain.product.entity.Product;
 import com.blanc.market.domain.product.mapper.ProductMapper;
 import com.blanc.market.domain.product.repository.ProductRepository;
@@ -22,10 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
-
-import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +31,7 @@ import java.util.Set;
 public class ProductService {
     private final ReviewMapper reviewMapper;
     private final ProductMapper productMapper;
+    private final IngredientMapper ingredientMapper;
     private final ProductRepository productRepository;
     private final IngredientRepository ingredientRepository;
     private final ProductIngredientRepository productIngredientRepository;
@@ -40,29 +39,31 @@ public class ProductService {
     @Transactional
     public void createProduct(ProductRequest request) {
         Product product = productMapper.toEntity(request);
+
+        productRepository.save(product);
+
         Set<IngredientRequest> ingredients = request.getIngredients();
 
-        // 기존 디비에 있는 성분인지 아닌지 판단
-        for (IngredientRequest ingredient : ingredients) {
-            boolean existIngredient =
-                    ingredientRepository.existsByName(ingredient.getName());
+        if (ingredients != null) {
+            for (IngredientRequest ingredientRequest : ingredients) {
+                Ingredient ingredient = ingredientRepository.findByName(ingredientRequest.getName())
+                        .orElseGet(() -> {
+                                    Ingredient newIngredient = ingredientMapper.toEntity(ingredientRequest);
+                                    ingredientRepository.save(newIngredient);
+                                    return newIngredient;
+                                }
+                        );
 
-            Ingredient newIngredient = IngredientMapper.INSTANCE.toEntity(ingredient);
-            if(!existIngredient) { // 디비에 없을 시에만 저장
-                ingredientRepository.save(newIngredient);
+                ProductIngredient productIngredient = ProductIngredient.builder()
+                        .ingredient(ingredient)
+                        .product(product)
+                        .build();
+
+                productIngredientRepository.save(productIngredient);
+
+                product.addProductIngredient(productIngredient);
             }
-
-            // 중간 테이블인 ProductIngredient 생성
-            ProductIngredient productIngredient = ProductIngredient.builder()
-                    .ingredient(newIngredient)
-                    .product(product)
-                    .build();
-
-            productIngredientRepository.save(productIngredient);
-
-            product.addProductIngredient(productIngredient);
         }
-        productRepository.save(product);
     }
 
     public ProductResponse getProductById(Long productId) {

@@ -47,7 +47,12 @@ class ProductServiceTest {
     @Test
     void createProduct() {
         // Given
-        ProductRequest productRequest = new ProductRequest("New Product", 150, "New Description");
+        ProductRequest productRequest = new ProductRequest(
+                "New Product",
+                150,
+                "New Description",
+                null
+        );
 
         // When
         productService.createProduct(productRequest);
