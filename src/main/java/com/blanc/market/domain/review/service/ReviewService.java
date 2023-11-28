@@ -34,7 +34,14 @@ public class ReviewService {
     }
 
     @Transactional
+    public void updateReview(Long id, ReviewRequest request) {
+        Review review = reviewRepository.findById(id).orElseThrow();
+        review.update(request);
+    }
+
+    @Transactional
     public void deleteReview(Long id) {
-        reviewRepository.deleteById(id);
+        Review review = reviewRepository.findById(id).orElseThrow();
+        review.delete();
     }
 }

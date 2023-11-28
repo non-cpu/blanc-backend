@@ -50,6 +50,7 @@ class ProductServiceTest {
         ProductRequest productRequest = new ProductRequest(
                 "New Product",
                 150,
+                null,
                 "New Description",
                 null
         );
