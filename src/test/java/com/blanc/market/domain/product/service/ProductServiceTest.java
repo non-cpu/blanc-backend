@@ -11,9 +11,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -23,6 +27,9 @@ class ProductServiceTest {
 
     @Autowired
     private ProductService productService;
+
+    @Autowired
+    private NamedLockProductFacade namedLockProductFacade;
 
     @Autowired
     private ProductRepository productRepository;
@@ -94,16 +101,28 @@ class ProductServiceTest {
     }
 
     @Test
-    void incrementLikeCount() {
-        // Given
+    @Transactional(propagation = Propagation.NEVER)
+    void updateLikeCount() throws InterruptedException {
         int initialLikeCount = testProduct.getLikeCount();
 
-        // When
-        productService.incrementLikeCount(testProduct.getId());
+        int threadCount = 32;
+        ExecutorService executorService = Executors.newFixedThreadPool(8);
+        CountDownLatch latch = new CountDownLatch(threadCount);
 
-        // Then
-        Product updatedProduct = productRepository.findById(testProduct.getId()).orElseThrow();
-        assertEquals(initialLikeCount + 1, updatedProduct.getLikeCount());
+        for (int i = 0; i < threadCount; i++) {
+            executorService.submit(() -> {
+                try {
+                    namedLockProductFacade.updateLikeCount(testProduct.getId(), 1);
+                } finally {
+                    latch.countDown();
+                }
+            });
+        }
+
+        latch.await();
+
+        Product product = productRepository.findById(testProduct.getId()).orElseThrow();
+        assertEquals(initialLikeCount + threadCount, product.getLikeCount());
     }
 
     @Test

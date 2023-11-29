@@ -19,6 +19,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -145,10 +146,10 @@ public class ProductService {
         product.update(request);
     }
 
-    @Transactional
-    public void incrementLikeCount(Long productId) {
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void updateLikeCount(Long productId, int incrementValue) {
         Product product = productRepository.findById(productId).orElseThrow();
-        product.setLikeCount(product.getLikeCount() + 1);
+        product.setLikeCount(product.getLikeCount() + incrementValue);
     }
 
     @Transactional
