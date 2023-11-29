@@ -25,16 +25,17 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
     private final AuthenticationManager authenticationManager;
+    private final UserMapper userMapper;
 
     @Transactional
     public UserDto signup(SignupRequest signupRequest){
-        User user = UserMapper.INSTANCE.toUser(signupRequest);
+        User user = userMapper.toUser(signupRequest);
         user.changePassword(passwordEncoder.encode(user.getPassword()));
         user.changeRole(Role.USER);
 
         userRepository.save(user);
 
-        UserDto userDto = UserMapper.INSTANCE.toUserDto(user);
+        UserDto userDto = userMapper.toUserDto(user);
 
         return userDto;
     }
@@ -56,7 +57,7 @@ public class AuthService {
         User user = userRepository.findUserByEmail(request.getEmail())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid email or password."));
         String jwt = jwtProvider.generateToken(new CustomUserDetails(user));
-        LoginResponse response = UserMapper.INSTANCE.toLoginResponse(user);
+        LoginResponse response = userMapper.toLoginResponse(user);
         response.changeToken(jwt);
         return response;
     }

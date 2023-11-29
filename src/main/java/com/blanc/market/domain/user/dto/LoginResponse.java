@@ -5,7 +5,8 @@ import lombok.*;
 import java.util.ArrayList;
 
 @Getter
-@Setter
+@Builder
+@AllArgsConstructor
 public class LoginResponse {
 
     private Long id;

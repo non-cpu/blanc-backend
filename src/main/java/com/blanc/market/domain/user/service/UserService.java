@@ -17,11 +17,12 @@ import java.util.NoSuchElementException;
 @Transactional(readOnly = true)
 public class UserService {
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
     public UserDto getUser(Long userId) {
         User user = userRepository.findUserById(userId)
                 .orElseThrow(NoSuchElementException::new);
-        return UserMapper.INSTANCE.toUserDto(user);
+        return userMapper.toUserDto(user);
     }
 
     @Transactional
@@ -37,7 +38,7 @@ public class UserService {
 
         userRepository.save(user);
 
-        return UserMapper.INSTANCE.toUserDto(user);
+        return userMapper.toUserDto(user);
     }
 
     @Transactional
