@@ -8,11 +8,13 @@ import com.blanc.market.domain.user.mapper.UserMapper;
 import com.blanc.market.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class UserService {
     private final UserRepository userRepository;
 
@@ -22,6 +24,7 @@ public class UserService {
         return UserMapper.INSTANCE.toUserDto(user);
     }
 
+    @Transactional
     public UserDto updateUser(Long userId, SignupRequest updateRequest) {
         User user = userRepository.findUserById(userId)
                 .orElseThrow(NoSuchElementException::new);
@@ -37,6 +40,7 @@ public class UserService {
         return UserMapper.INSTANCE.toUserDto(user);
     }
 
+    @Transactional
     public boolean deleteUser(Long userId){
         User user = userRepository.findUserById(userId)
                 .orElseThrow(NoSuchElementException::new);
