@@ -1,6 +1,7 @@
 package com.blanc.market.domain.user.entity;
 
 import com.blanc.market.domain.order.entity.Order;
+import com.blanc.market.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,10 +16,10 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @RequiredArgsConstructor
-public class User {
+public class User extends BaseEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
@@ -54,4 +55,6 @@ public class User {
     public void changeRole(Role role) {
         this.role = role;
     }
+
+
 }
