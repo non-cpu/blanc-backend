@@ -2,6 +2,7 @@ package com.blanc.market.domain.product.service;
 
 
 
+import com.blanc.market.domain.product.entity.Category;
 import com.blanc.market.domain.product.entity.Product;
 import com.blanc.market.domain.ingredient.dto.IngredientRequest;
 import com.blanc.market.domain.ingredient.entity.Ingredient;
@@ -185,5 +186,13 @@ public class ProductService {
 
         return productRepository.findByNameContaining(keyword, pageable)
                 .map(productMapper::from);
+    }
+
+    @Transactional
+    public Page<ProductResponse> searchProductForCategory(Category category, int page, int size){
+        Pageable pageable = PageRequest.of(page, size);
+
+        return productRepository.findByCategory(category,pageable).map(productMapper::from);
+
     }
 }

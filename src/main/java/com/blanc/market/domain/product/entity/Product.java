@@ -42,6 +42,10 @@ public class Product extends BaseEntity {
 
     private int likeCount;
 
+
+    @Enumerated(EnumType.STRING)
+    private Category category;
+
     public void update(ProductUpdateRequest request) {
         if (request.getName() != null) {
             this.name = request.getName();
@@ -72,4 +76,8 @@ public class Product extends BaseEntity {
     public void setLikeCount(int likeCount) {
         this.likeCount = likeCount;
     }
+
+
+
+
 }

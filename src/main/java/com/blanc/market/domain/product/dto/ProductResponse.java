@@ -1,6 +1,7 @@
 package com.blanc.market.domain.product.dto;
 
 import com.blanc.market.domain.ingredient.dto.IngredientDto;
+import com.blanc.market.domain.product.entity.Category;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -16,4 +17,5 @@ public class ProductResponse {
     private String description;
     private int likeCount;
     private Set<IngredientDto> ingredients;
+    private Category category;
 }
