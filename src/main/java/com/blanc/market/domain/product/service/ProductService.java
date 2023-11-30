@@ -20,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -112,9 +113,16 @@ public class ProductService {
     }
 
     @Transactional
-    public Page<ProductResponse> searchProductForKeyword(String keyword, int page, int size){
-        Pageable pageable = PageRequest.of(page, size);
-        return productRepository.findByNameContainingOrderByName(keyword, pageable)
+    public Page<ProductResponse> searchProductForKeyword(String keyword, int page, int size, String sort){
+        Pageable pageable;
+        if("likeCount".equals(sort)){
+            pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, sort));
+        }
+        else{
+            pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, sort));
+        }
+
+        return productRepository.findByNameContaining(keyword, pageable)
                 .map(productMapper::from);
     }
 }
