@@ -4,7 +4,6 @@ import com.blanc.market.domain.like.dto.LikeRequest;
 import com.blanc.market.domain.like.dto.LikeResponse;
 import com.blanc.market.domain.like.service.LikeService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,18 +16,14 @@ public class LikeController {
 
     private final LikeService likeService;
 
-    @PostMapping
-    public ResponseEntity<Void> createLike(@RequestBody LikeRequest likeRequest) {
-        likeService.createLike(likeRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+    @PostMapping("/toggle")
+    public ResponseEntity<Boolean> toggleLike(@RequestBody LikeRequest request) {
+        return ResponseEntity.ok(likeService.toggleLike(request));
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<LikeResponse> getLikeById(@PathVariable Long id) {
-        LikeResponse like = likeService.getLikeById(id);
-        return like != null
-                ? ResponseEntity.ok(like)
-                : ResponseEntity.notFound().build();
+    @GetMapping("/{userId}")
+    public ResponseEntity<List<LikeResponse>> getAllLikesByUserId(@PathVariable Long userId) {
+        return ResponseEntity.ok(likeService.getAllLikesByUserId(userId));
     }
 
     @GetMapping
@@ -36,9 +31,8 @@ public class LikeController {
         return ResponseEntity.ok(likeService.getAllLikes());
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteLike(@PathVariable Long id) {
-        likeService.deleteLike(id);
-        return ResponseEntity.noContent().build();
+    @GetMapping("/check")
+    public ResponseEntity<Boolean> checkLike(@RequestParam Long userId, @RequestParam Long productId) {
+        return ResponseEntity.ok(likeService.isLikedByUserAndProduct(userId, productId));
     }
 }

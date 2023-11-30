@@ -5,12 +5,13 @@ import com.blanc.market.domain.like.dto.LikeResponse;
 import com.blanc.market.domain.like.entity.Like;
 import com.blanc.market.domain.like.mapper.LikeMapper;
 import com.blanc.market.domain.like.repository.LikeRepository;
-import com.blanc.market.domain.product.service.ProductService;
+import com.blanc.market.domain.product.service.NamedLockProductFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -19,16 +20,27 @@ import java.util.stream.Collectors;
 public class LikeService {
     private final LikeMapper likeMapper;
     private final LikeRepository likeRepository;
-    private final ProductService productService;
+    private final NamedLockProductFacade namedLockProductFacade;
 
     @Transactional
-    public void createLike(LikeRequest likeRequest) {
-        productService.incrementLikeCount(likeRequest.getProductId());
-        likeRepository.save(likeMapper.toEntity(likeRequest));
+    public boolean toggleLike(LikeRequest request) {
+        Optional<Like> existingLike = likeRepository.findByUserIdAndProductId(request.getUserId(), request.getProductId());
+
+        if (existingLike.isPresent()) {
+            Like like = existingLike.get();
+            namedLockProductFacade.updateLikeCount(like.getProduct().getId(), -1);
+            likeRepository.deleteById(like.getId());
+            return false;
+        } else {
+            namedLockProductFacade.updateLikeCount(request.getProductId(), 1);
+            likeRepository.save(likeMapper.toEntity(request));
+            return true;
+        }
     }
 
-    public LikeResponse getLikeById(Long id) {
-        return likeMapper.from(likeRepository.findById(id).orElse(null));
+    public List<LikeResponse> getAllLikesByUserId(Long userId) {
+        List<Like> likes = likeRepository.findByUserId(userId);
+        return likes.stream().map(likeMapper::from).collect(Collectors.toList());
     }
 
     public List<LikeResponse> getAllLikes() {
@@ -36,8 +48,7 @@ public class LikeService {
         return likes.stream().map(likeMapper::from).collect(Collectors.toList());
     }
 
-    @Transactional
-    public void deleteLike(Long id) {
-        likeRepository.deleteById(id);
+    public boolean isLikedByUserAndProduct(Long userId, Long productId) {
+        return likeRepository.existsByUserIdAndProductId(userId, productId);
     }
 }

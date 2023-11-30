@@ -13,6 +13,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -35,16 +36,13 @@ class LikeServiceTest {
     @Autowired
     private ProductRepository productRepository;
 
-    private Like testLike;
     private User testUser;
     private Product testProduct;
 
     @BeforeEach
     void setUp() {
-        testLike = likeRepository.save(Like.builder().build());
-
+        likeRepository.save(Like.builder().build());
         testUser = userRepository.save(User.builder().build());
-
         testProduct = productRepository.save(Product.builder()
                 .name("Test Product")
                 .description("Description")
@@ -60,6 +58,40 @@ class LikeServiceTest {
     }
 
     @Test
+    @Transactional(propagation = Propagation.NEVER)
+    void toggleLike() {
+        // Given
+        LikeRequest likeRequest = new LikeRequest(testUser.getId(), testProduct.getId());
+
+        // When
+        assertTrue(likeService.toggleLike(likeRequest));
+        List<LikeResponse> likeResponses = likeService.getAllLikes();
+
+        // Then
+        assertNotNull(likeResponses);
+        assertNotNull(likeResponses.get(1).getId());
+        assertEquals(testProduct.getId(), likeResponses.get(1).getProductId());
+
+        assertFalse(likeService.toggleLike(likeRequest));
+    }
+
+    @Test
+    @Transactional(propagation = Propagation.NEVER)
+    void getAllLikesByUserId() {
+        // Given
+        LikeRequest likeRequest = new LikeRequest(testUser.getId(), testProduct.getId());
+        likeService.toggleLike(likeRequest);
+
+        // When
+        List<LikeResponse> likeResponses = likeService.getAllLikesByUserId(testUser.getId());
+
+        // Then
+        assertNotNull(likeResponses);
+        assertEquals(1, likeResponses.size());
+        assertEquals(testUser.getId(), likeResponses.get(0).getUserId());
+    }
+
+    @Test
     void getAllLikes() {
         // When
         List<LikeResponse> likeResponses = likeService.getAllLikes();
@@ -70,36 +102,16 @@ class LikeServiceTest {
     }
 
     @Test
-    void getLikeById() {
-        // When
-        LikeResponse likeResponse = likeService.getLikeById(testLike.getId());
-
-        // Then
-        assertNotNull(likeResponse);
-        assertEquals(testLike.getId(), likeResponse.getId());
-    }
-
-    @Test
-    void createLike() {
+    @Transactional(propagation = Propagation.NEVER)
+    void isLikedByUserAndProduct() {
         // Given
         LikeRequest likeRequest = new LikeRequest(testUser.getId(), testProduct.getId());
+        likeService.toggleLike(likeRequest);
 
         // When
-        likeService.createLike(likeRequest);
-        List<LikeResponse> likeResponses = likeService.getAllLikes();
+        boolean isLiked = likeService.isLikedByUserAndProduct(testUser.getId(), testProduct.getId());
 
         // Then
-        assertNotNull(likeResponses);
-        assertNotNull(likeResponses.get(1).getId());
-        assertEquals(testProduct.getId(), likeResponses.get(1).getProductId());
-    }
-
-    @Test
-    void deleteLike() {
-        // When
-        likeService.deleteLike(testLike.getId());
-
-        // Then
-        assertNull(likeRepository.findById(testLike.getId()).orElse(null));
+        assertTrue(isLiked);
     }
 }
