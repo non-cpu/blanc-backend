@@ -95,6 +95,6 @@ class ReviewServiceTest {
         reviewService.deleteReview(testReview.getId());
 
         // Then
-        assertNull(reviewRepository.findById(testReview.getId()).orElse(null));
+        assertTrue(reviewRepository.findById(testReview.getId()).orElseThrow().isDeleted());
     }
 }

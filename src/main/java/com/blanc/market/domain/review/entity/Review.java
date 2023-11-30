@@ -1,6 +1,7 @@
 package com.blanc.market.domain.review.entity;
 
 import com.blanc.market.domain.product.entity.Product;
+import com.blanc.market.domain.review.dto.ReviewRequest;
 import com.blanc.market.domain.user.entity.User;
 import com.blanc.market.global.entity.BaseEntity;
 import jakarta.persistence.*;
@@ -30,4 +31,9 @@ public class Review extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private Product product;
+
+    public void update(ReviewRequest request) {
+        this.content = request.getContent();
+        this.rating = request.getRating();
+    }
 }
