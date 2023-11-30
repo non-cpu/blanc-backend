@@ -1,5 +1,8 @@
 package com.blanc.market.domain.product.service;
 
+
+
+import com.blanc.market.domain.product.entity.Product;
 import com.blanc.market.domain.ingredient.dto.IngredientRequest;
 import com.blanc.market.domain.ingredient.entity.Ingredient;
 import com.blanc.market.domain.ingredient.entity.ProductIngredient;
@@ -15,9 +18,11 @@ import com.blanc.market.domain.product.repository.ProductRepository;
 import com.blanc.market.domain.review.dto.ReviewResponse;
 import com.blanc.market.domain.review.mapper.ReviewMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,15 +31,17 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
+import java.util.Collections;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
+@Slf4j
 public class ProductService {
     private final ReviewMapper reviewMapper;
     private final ProductMapper productMapper;
@@ -156,5 +163,27 @@ public class ProductService {
     public void delete(Long productId) {
         Product product = productRepository.findById(productId).orElseThrow();
         product.delete();
+    }
+
+
+    //제품검색
+    @Transactional
+    public List<ProductResponse> search(String keyword){
+        return productRepository.findByNameContaining(keyword).stream()
+                .map(productMapper::from).toList();
+    }
+
+    @Transactional
+    public Page<ProductResponse> searchProductForKeyword(String keyword, int page, int size, String sort){
+        Pageable pageable;
+        if("likeCount".equals(sort)){
+            pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, sort));
+        }
+        else{
+            pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, sort));
+        }
+
+        return productRepository.findByNameContaining(keyword, pageable)
+                .map(productMapper::from);
     }
 }
