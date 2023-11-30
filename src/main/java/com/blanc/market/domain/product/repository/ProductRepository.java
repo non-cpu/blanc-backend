@@ -24,6 +24,4 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     void releaseLock(String key);
 
 
-    List<Product> findByNameContaining(String keyword);
-    Page<Product> findByNameContaining(String keyword, Pageable pageable);
 }
