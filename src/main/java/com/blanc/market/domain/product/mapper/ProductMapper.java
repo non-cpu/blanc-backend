@@ -16,4 +16,6 @@ public interface ProductMapper {
 
     @Mapping(source = "productIngredients", target = "ingredients")
     ProductResponse from(Product product);
+
+
 }

@@ -40,6 +40,9 @@ public class Product extends BaseEntity {
 
     private int likeCount;
 
+    @Enumerated(EnumType.STRING)
+    private Category category;
+
     public void addProductIngredient(ProductIngredient productIngredient) {
         if (productIngredients == null) {
             productIngredients = new HashSet<>();
@@ -51,4 +54,8 @@ public class Product extends BaseEntity {
     public void setLikeCount(int likeCount) {
         this.likeCount = likeCount;
     }
+
+
+
+
 }

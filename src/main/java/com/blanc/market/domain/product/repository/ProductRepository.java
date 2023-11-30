@@ -1,5 +1,6 @@
 package com.blanc.market.domain.product.repository;
 
+import com.blanc.market.domain.product.entity.Category;
 import com.blanc.market.domain.product.entity.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,6 +13,6 @@ import java.util.List;
 public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findByNameContaining(String keyword);
     Page<Product> findByNameContaining(String keyword, Pageable pageable);
-
+    Page<Product> findByCategory(Category category, Pageable pageable);
 
 }
