@@ -7,9 +7,6 @@ import com.blanc.market.domain.review.dto.ReviewResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -41,13 +38,6 @@ public class ProductController {
     }
 
 
-
-
-    @GetMapping("/{productId}")
-    public Product getProductById(@PathVariable Long productId) {
-        return productService.getProductById(productId);
-    
-
     @GetMapping("/{id}/reviews")
     public ResponseEntity<List<ReviewResponse>> getReviewsForProduct(@PathVariable Long id) {
         return ResponseEntity.ok(productService.getReviewsForProduct(id));
@@ -63,8 +53,8 @@ public class ProductController {
 
     //검색 컨트롤러
     @GetMapping("/search/{keyword}")
-    public ResponseEntity<List<ProductResponse>> searchProduct(@PathVariable String keyword, Pageable pageable){
-        return ResponseEntity.ok(productService.searchPage(keyword, pageable).getContent());
+    public ResponseEntity<List<ProductResponse>> searchProduct(@PathVariable String keyword, int page, @RequestParam(defaultValue = "10") int size){
+        return ResponseEntity.ok(productService.searchProductForKeyword(keyword, page, size).getContent());
     }
 }
 
