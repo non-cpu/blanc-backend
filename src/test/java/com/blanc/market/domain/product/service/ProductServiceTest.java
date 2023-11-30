@@ -59,6 +59,7 @@ class ProductServiceTest {
                 150,
                 null,
                 "New Description",
+                null,
                 null
         );
 
