@@ -67,10 +67,8 @@ public class ProductController {
     }
 
     @GetMapping("/search/{category}/category")
-    public ResponseEntity<List<ProductResponse>> searchProductForCategory(@PathVariable String category, int page, @RequestParam(defaultValue = "10") int size){
-        Category categoryEnum = Category.valueOf(category.toUpperCase());
-
-        return ResponseEntity.ok(productService.searchProductForCategory(categoryEnum, page, size).getContent());
+    public ResponseEntity<List<ProductResponse>> searchProductForCategory(@PathVariable Category category, int page, @RequestParam(defaultValue = "10") int size){
+        return ResponseEntity.ok(productService.searchProductForCategory(category, page, size).getContent());
     }
 
 }
