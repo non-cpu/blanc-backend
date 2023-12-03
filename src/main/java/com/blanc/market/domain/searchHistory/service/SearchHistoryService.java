@@ -8,12 +8,13 @@ import com.blanc.market.domain.searchHistory.entity.SearchHistory;
 import com.blanc.market.domain.searchHistory.repository.SearchHistoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-
+@Transactional(readOnly = true)
 public class SearchHistoryService {
 
     private final SearchHistoryRepository searchHistoryRepository;
