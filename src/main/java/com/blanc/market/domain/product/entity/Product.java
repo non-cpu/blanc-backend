@@ -7,6 +7,7 @@ import com.blanc.market.domain.searchHistory.entity.SearchHistory;
 import com.blanc.market.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.LazyGroup;
 import org.hibernate.annotations.Where;
 
 import java.util.HashSet;
@@ -41,9 +42,8 @@ public class Product extends BaseEntity {
     )
     private List<Review> reviews;
 
-    @OneToOne
-    @JoinColumn(name = "search_history_id")
-    private SearchHistory searchHistory;
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+    private List<SearchHistory> searchHistories;
 
     private int likeCount;
 

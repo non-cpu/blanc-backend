@@ -15,8 +15,9 @@ public class SearchHistory extends BaseEntity {
     @Column(name = "search_history_id")
     private Long id;
 
-    @OneToOne(mappedBy = "searchHistory")
+    @ManyToOne
+    @JoinColumn(name = "product_id")
     private Product product;
 
-    private int searchCount = 0;
+//    private int searchCount = 0;
 }

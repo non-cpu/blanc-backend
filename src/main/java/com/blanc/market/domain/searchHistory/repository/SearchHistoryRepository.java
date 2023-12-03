@@ -11,6 +11,6 @@ import java.util.Optional;
 public interface SearchHistoryRepository extends JpaRepository<SearchHistory, Long> {
     Optional<SearchHistory> findByProduct(Product product);
 
-    List<SearchHistory> findByUpdatedAtBeforeOrderBySearchCountDesc(LocalDateTime time);
+//    List<SearchHistory> findByUpdatedAtBeforeOrderBySearchCountDesc(LocalDateTime time);
 
 }
