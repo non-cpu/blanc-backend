@@ -22,7 +22,7 @@ public class User extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
+    private String nickname;
 
     private String email;
 
@@ -31,13 +31,23 @@ public class User extends BaseEntity {
     private String address;
 
     @Enumerated(EnumType.STRING)
+    private Gender gender;
+
+    @Enumerated(EnumType.STRING)
+    private SkinType skinType;
+
+    @Enumerated(EnumType.STRING)
+    @ElementCollection
+    private List<SkinConcerns> skinConcerns = new ArrayList<>();
+
+    @Enumerated(EnumType.STRING)
     private Role role;
 
     @OneToMany(mappedBy = "user")
     private List<Order> order = new ArrayList<>();
 
-    public void changeName(String name) {
-        this.name = name;
+    public void changeNickname(String name) {
+        this.nickname = name;
     }
 
     public void changeEmail(String email) {
@@ -56,5 +66,15 @@ public class User extends BaseEntity {
         this.role = role;
     }
 
+    public void changeGender(Gender gender) {
+        this.gender = gender;
+    }
 
+    public void changeSkinType(SkinType skinType) {
+        this.skinType = skinType;
+    }
+
+    public void changeSkinConcerns(List<SkinConcerns> skinConcerns) {
+        this.skinConcerns = skinConcerns;
+    }
 }

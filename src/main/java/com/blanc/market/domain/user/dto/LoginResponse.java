@@ -11,11 +11,9 @@ public class LoginResponse {
 
     private Long id;
 
-    private String name;
+    private String nickname;
 
     private String email;
-
-    private String password;
 
     private String token;
 

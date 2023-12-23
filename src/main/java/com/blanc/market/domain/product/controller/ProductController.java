@@ -81,15 +81,15 @@ public class ProductController {
     //검색 컨트롤러
     @Operation(summary = "키워드로 제품 조회", description = "sort=default:name 정렬, sort=likeCont:좋아요순 정렬")
     @GetMapping("/search/{keyword}")
-    public ResponseEntity<List<ProductResponse>> searchProduct(@PathVariable String keyword, int page,
+    public ResponseEntity<Page<ProductResponse>> searchProduct(@PathVariable String keyword, int page,
                                                                @RequestParam(defaultValue = "10") int size,
                                                                @RequestParam(defaultValue = "name") String sort){
-        return ResponseEntity.ok(productService.searchProductForKeyword(keyword, page, size, sort).getContent());
+        return ResponseEntity.ok(productService.searchProductForKeyword(keyword, page, size, sort));
     }
 
-    @GetMapping("/search/{category}/category")
-    public ResponseEntity<List<ProductResponse>> searchProductForCategory(@PathVariable Category category, int page, @RequestParam(defaultValue = "10") int size){
-        return ResponseEntity.ok(productService.searchProductForCategory(category, page, size).getContent());
+    @GetMapping("/search/category/{category}")
+    public ResponseEntity<Page<ProductResponse>> searchProductForCategory(@PathVariable Category category, int page, @RequestParam(defaultValue = "10") int size){
+        return ResponseEntity.ok(productService.searchProductForCategory(category, page, size));
     }
 
 }
