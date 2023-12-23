@@ -1,5 +1,7 @@
 package com.blanc.market.domain.user.dto;
 
+
+import lombok.Builder;
 import com.blanc.market.domain.user.entity.Gender;
 import com.blanc.market.domain.user.entity.SkinConcerns;
 import com.blanc.market.domain.user.entity.SkinType;
@@ -12,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-@Setter
+@Builder
 public class UserDto {
     private Long id;
 

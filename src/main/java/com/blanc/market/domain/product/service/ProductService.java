@@ -18,6 +18,8 @@ import com.blanc.market.domain.product.mapper.ProductMapper;
 import com.blanc.market.domain.product.repository.ProductRepository;
 import com.blanc.market.domain.review.dto.ReviewResponse;
 import com.blanc.market.domain.review.mapper.ReviewMapper;
+import com.blanc.market.domain.searchHistory.entity.SearchHistory;
+import com.blanc.market.domain.searchHistory.repository.SearchHistoryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -50,6 +52,7 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final IngredientRepository ingredientRepository;
     private final ProductIngredientRepository productIngredientRepository;
+    private final SearchHistoryRepository searchHistoryRepository;
 
     private static final long MAX_FILE_SIZE = 5 * 1024 * 1024;
     private static final String UPLOAD_DIR = System.getProperty("user.dir") + "/src/main/resources/static";
@@ -184,8 +187,12 @@ public class ProductService {
             pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, sort));
         }
 
-        return productRepository.findByNameContaining(keyword, pageable)
-                .map(productMapper::from);
+        Page<Product> products = productRepository.findByNameContaining(keyword, pageable);
+        for (Product product : products) {
+            SearchHistory searchHistory = SearchHistory.builder().product(product).build();
+            searchHistoryRepository.save(searchHistory);
+        }
+        return products.map(productMapper::from);
     }
 
     @Transactional

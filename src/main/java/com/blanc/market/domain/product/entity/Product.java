@@ -3,9 +3,11 @@ package com.blanc.market.domain.product.entity;
 import com.blanc.market.domain.ingredient.entity.ProductIngredient;
 import com.blanc.market.domain.product.dto.ProductUpdateRequest;
 import com.blanc.market.domain.review.entity.Review;
+import com.blanc.market.domain.searchHistory.entity.SearchHistory;
 import com.blanc.market.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.LazyGroup;
 import org.hibernate.annotations.Where;
 
 import java.util.HashSet;
@@ -39,6 +41,9 @@ public class Product extends BaseEntity {
             orphanRemoval = true
     )
     private List<Review> reviews;
+
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+    private List<SearchHistory> searchHistories;
 
     private int likeCount;
 
