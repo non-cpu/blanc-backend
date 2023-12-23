@@ -26,7 +26,7 @@ public class UserService {
         User user = userRepository.findUserById(userId)
                 .orElseThrow(NoSuchElementException::new);
 
-        user.changeName(updateRequest.getName());
+        user.changeNickname(updateRequest.getNickname());
         user.changeEmail(updateRequest.getEmail());
         user.changePassword(updateRequest.getPassword());
         user.changeAddress(updateRequest.getAddress());
