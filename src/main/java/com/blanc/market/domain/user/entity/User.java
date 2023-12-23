@@ -31,6 +31,15 @@ public class User extends BaseEntity {
     private String address;
 
     @Enumerated(EnumType.STRING)
+    private String gender;
+
+    @Enumerated(EnumType.STRING)
+    private String skinType;
+
+    @Enumerated(EnumType.STRING)
+    private List<SkinConcerns> skinConcerns = new ArrayList<>();
+
+    @Enumerated(EnumType.STRING)
     private Role role;
 
     @OneToMany(mappedBy = "user")
