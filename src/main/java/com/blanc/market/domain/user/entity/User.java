@@ -31,13 +31,13 @@ public class User extends BaseEntity {
     private String address;
 
     @Enumerated(EnumType.STRING)
-    private String gender;
+    private Gender gender;
 
     @Enumerated(EnumType.STRING)
-    private String skinType;
+    private SkinType skinType;
 
     @Enumerated(EnumType.STRING)
-    @OneToMany(mappedBy = "user")
+    @ElementCollection
     private List<SkinConcerns> skinConcerns = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
@@ -66,5 +66,15 @@ public class User extends BaseEntity {
         this.role = role;
     }
 
+    public void changeGender(Gender gender) {
+        this.gender = gender;
+    }
 
+    public void changeSkinType(SkinType skinType) {
+        this.skinType = skinType;
+    }
+
+    public void changeSkinConcerns(List<SkinConcerns> skinConcerns) {
+        this.skinConcerns = skinConcerns;
+    }
 }

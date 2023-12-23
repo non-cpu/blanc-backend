@@ -30,6 +30,8 @@ public class UserService {
         user.changeEmail(updateRequest.getEmail());
         user.changePassword(updateRequest.getPassword());
         user.changeAddress(updateRequest.getAddress());
+        user.changeSkinConcerns(updateRequest.getSkinConcerns());
+        user.changeSkinType(updateRequest.getSkinType());
         user.changeRole(Role.USER);
 
         userRepository.save(user);

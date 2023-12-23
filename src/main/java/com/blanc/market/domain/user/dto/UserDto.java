@@ -1,6 +1,8 @@
 package com.blanc.market.domain.user.dto;
 
+import com.blanc.market.domain.user.entity.Gender;
 import com.blanc.market.domain.user.entity.SkinConcerns;
+import com.blanc.market.domain.user.entity.SkinType;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import lombok.Getter;
@@ -22,9 +24,9 @@ public class UserDto {
 
     private String address;
 
-    private String gender;
+    private Gender gender;
 
-    private String skinType;
+    private SkinType skinType;
 
     private List<SkinConcerns> skinConcerns = new ArrayList<>();
 }
