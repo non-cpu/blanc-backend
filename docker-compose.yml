@@ -9,7 +9,7 @@ services:
     depends_on:
       - mysql-db
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/${DB_DATABASE}
+      - SPRING_DATASOURCE_URL=jdbc:mysql://${DB_URL}
       - SPRING_DATASOURCE_USERNAME=${DB_USERNAME}
       - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
     networks:
