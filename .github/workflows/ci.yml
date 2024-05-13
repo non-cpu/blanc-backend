@@ -7,8 +7,7 @@ on:
     branches: [ "main" ] # main 브랜치로 풀 리퀘스트가 올라올 때 CI를 실행합니다.
 
 jobs:
-  build:
-
+  ci:
     runs-on: ubuntu-latest
     env:
         DB_URL: ${{ secrets.DB_URL }}
@@ -30,9 +29,6 @@ jobs:
 
     - name: Grant execute permission for Gradle wrapper
       run: chmod +x ./gradlew
-
-    # - name: Build with Gradle
-    #   run: ./gradlew build
 
     - name: Run Tests
       run: ./gradlew test
