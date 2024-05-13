@@ -10,6 +10,10 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    env:
+        DB_URL: ${{ secrets.DB_URL }}
+        DB_USERNAME: ${{ secrets.DB_USERNAME }}
+        DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
     strategy:
       max-parallel: 4
 
@@ -31,8 +35,4 @@ jobs:
     #   run: ./gradlew build
 
     - name: Run Tests
-      run: |
-        export DB_URL=${{ secrets.DB_URL }}
-        export DB_USERNAME=${{ secrets.DB_USERNAME }}
-        export DB_PASSWORD=${{ secrets.DB_PASSWORD }}
-        ./gradlew test
+      run: ./gradlew test
