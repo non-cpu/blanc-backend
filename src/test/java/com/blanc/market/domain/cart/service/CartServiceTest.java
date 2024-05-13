@@ -41,7 +41,7 @@ class CartServiceTest {
     @BeforeEach
     void setUp() {
         testUser = userRepository.save(User.builder()
-                .name("testUser")
+                .nickname("testUser")
                 .email("test@example.com")
                 .build()
         );
