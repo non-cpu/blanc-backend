@@ -2,9 +2,9 @@ name: Spring Boot CI
 
 on:
   push:
-    branches: [ "main" ] # main 브랜치에 푸시될 때 CI를 실행합니다.
+    branches: [ "main" ]
   pull_request:
-    branches: [ "main" ] # main 브랜치로 풀 리퀘스트가 올라올 때 CI를 실행합니다.
+    branches: [ "main" ]
 
 jobs:
   ci:
