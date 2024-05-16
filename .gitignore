@@ -56,3 +56,8 @@ out/
 
 .DS_Store
 .env
+
+monitor/prometheus/volume/*
+monitor/grafana/alerting/*
+monitor/grafana/volume/*
+monitor/grafana/*.db
