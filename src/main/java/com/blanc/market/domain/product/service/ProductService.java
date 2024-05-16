@@ -13,7 +13,6 @@ import com.blanc.market.domain.ingredient.repository.ProductIngredientRepository
 import com.blanc.market.domain.product.dto.ProductRequest;
 import com.blanc.market.domain.product.dto.ProductResponse;
 import com.blanc.market.domain.product.dto.ProductUpdateRequest;
-import com.blanc.market.domain.product.entity.Product;
 import com.blanc.market.domain.product.mapper.ProductMapper;
 import com.blanc.market.domain.product.repository.ProductRepository;
 import com.blanc.market.domain.review.dto.ReviewResponse;
@@ -155,6 +154,12 @@ public class ProductService {
     public void updateProduct(Long productId, ProductUpdateRequest request) {
         Product product = productRepository.findById(productId).orElseThrow();
         product.update(request);
+    }
+
+    @Transactional
+    public void updateProductCount(Long productId, int incrementValue) {
+        Product product = productRepository.findByIdWithPessimisticLock(productId).orElseThrow();
+        product.setCount(product.getCount() + incrementValue);
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)

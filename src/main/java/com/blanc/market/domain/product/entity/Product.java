@@ -5,10 +5,9 @@ import com.blanc.market.domain.product.dto.ProductUpdateRequest;
 import com.blanc.market.domain.review.entity.Review;
 import com.blanc.market.domain.searchHistory.entity.SearchHistory;
 import com.blanc.market.global.entity.BaseEntity;
+import org.hibernate.annotations.Where;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.LazyGroup;
-import org.hibernate.annotations.Where;
 
 import java.util.HashSet;
 import java.util.List;
@@ -45,6 +44,8 @@ public class Product extends BaseEntity {
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
     private List<SearchHistory> searchHistories;
 
+    private int count;
+
     private int likeCount;
 
 
@@ -76,6 +77,10 @@ public class Product extends BaseEntity {
         }
 
         productIngredients.add(productIngredient);
+    }
+
+    public void setCount(int count) {
+        this.count = count;
     }
 
     public void setLikeCount(int likeCount) {

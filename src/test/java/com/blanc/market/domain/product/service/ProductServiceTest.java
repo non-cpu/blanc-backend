@@ -36,6 +36,25 @@ class ProductServiceTest {
 
     private Product testProduct;
 
+    private final int taskCount = 32;
+
+    private void executeParallel(int taskCount, Runnable runnable) throws InterruptedException {
+        ExecutorService executorService = Executors.newFixedThreadPool(8);
+        CountDownLatch latch = new CountDownLatch(taskCount);
+
+        for (int i = 0; i < taskCount; i++) {
+            executorService.submit(() -> {
+                try {
+                    runnable.run();
+                } finally {
+                    latch.countDown();
+                }
+            });
+        }
+
+        latch.await();
+    }
+
     @BeforeEach
     void setUp() {
         testProduct = productRepository.save(Product.builder()
@@ -103,27 +122,26 @@ class ProductServiceTest {
 
     @Test
     @Transactional(propagation = Propagation.NEVER)
+    void updateCount() throws InterruptedException {
+        int initialCount = testProduct.getCount();
+
+        this.executeParallel(this.taskCount,
+                () -> productService.updateProductCount(testProduct.getId(), 1));
+
+        Product product = productRepository.findById(testProduct.getId()).orElseThrow();
+        assertEquals(initialCount + this.taskCount, product.getCount());
+    }
+
+    @Test
+    @Transactional(propagation = Propagation.NEVER)
     void updateLikeCount() throws InterruptedException {
         int initialLikeCount = testProduct.getLikeCount();
 
-        int threadCount = 32;
-        ExecutorService executorService = Executors.newFixedThreadPool(8);
-        CountDownLatch latch = new CountDownLatch(threadCount);
-
-        for (int i = 0; i < threadCount; i++) {
-            executorService.submit(() -> {
-                try {
-                    namedLockProductFacade.updateLikeCount(testProduct.getId(), 1);
-                } finally {
-                    latch.countDown();
-                }
-            });
-        }
-
-        latch.await();
+        this.executeParallel(this.taskCount,
+                () -> namedLockProductFacade.updateLikeCount(testProduct.getId(), 1));
 
         Product product = productRepository.findById(testProduct.getId()).orElseThrow();
-        assertEquals(initialLikeCount + threadCount, product.getLikeCount());
+        assertEquals(initialLikeCount + this.taskCount, product.getLikeCount());
     }
 
     @Test
